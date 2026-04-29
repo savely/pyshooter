@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.1-8-g449813058" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="6">
+ <tileset firstgid="1" name="colors" tilewidth="32" tileheight="32" tilecount="4144" columns="112">
+  <image source="dummy_colors.png" width="3584" height="1184"/>
+  <tile id="0">
+   <properties>
+    <property name="color" value="green"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="color" value="gray"/>
+    <property name="is_wall" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="color" value="blue"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="4145" source="dummy_colors.tsx"/>
+ <layer id="1" name="Ground" width="20" height="15">
+  <data encoding="csv">
+3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,
+3649,3714,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3649,
+3649,3714,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3649,
+3649,3714,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,3714,3649,
+3649,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3714,3649,
+3649,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3714,3649,
+3649,1,1,1,1,1,1,1,3551,3551,3551,3551,1,1,1,1,1,1,3714,3649,
+3649,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3714,3649,
+3649,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3649,
+3649,1,1,1,1,1,1,1,1,1,1,1,1,3551,1,1,1,1,1,3649,
+3649,1,1,1,1,1,1,1,1,1,1,1,1,3551,1,1,1,1,1,3649,
+3649,1,1,1,1,1,1,1,1,1,1,1,1,3551,1,1,1,1,1,3649,
+3649,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3649,
+3649,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3649,
+3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649,3649
+</data>
+ </layer>
+ <objectgroup id="3" name="spawns">
+  <object id="5" name="spawn1" x="318.129" y="323.743">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="2" name="walls">
+  <object id="1" x="0" y="0" width="640" height="32"/>
+  <object id="2" x="0" y="448" width="640" height="32"/>
+  <object id="3" x="0" y="32" width="32" height="416"/>
+  <object id="4" x="608" y="32" width="32" height="416"/>
+  <object id="5" x="256" y="192" width="128" height="32"/>
+  <object id="6" x="416" y="288" width="32" height="96"/>
+ </objectgroup>
+</map>
