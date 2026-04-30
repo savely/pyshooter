@@ -50,17 +50,17 @@ class Config:
     # layers
     @property
     def wall_layer_name(self) -> str:
-        return "Walls"
+        return "walls"
     
     @property
     def entity_layer_name(self) -> str:
-        return "Player"
+        return "player"
     @property
     def prjectile_layer_name(self) -> str:
-        return "Projectiles"
+        return "projectiles"
     @property
     def enemy_layer_name(self) -> str:
-        return "Enemies"
+        return "enemies"
     
     # spawn points
     @property

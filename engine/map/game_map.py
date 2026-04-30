@@ -34,11 +34,22 @@ class TiledGameMap(GameMap):
         self.tmx_data = pytmx.util_pygame.load_pygame(filename)
         map_data = pyscroll.data.TiledMapData(self.tmx_data)
         self.map_layer = pyscroll.BufferedRenderer(map_data, screen_size)
-        self.map_layer.zoom = 1
+        self.map_layer.zoom = 2
 
-    def get_layer_rects(self, name: str) -> list[pygame.Rect]:
-        return [pygame.Rect(obj.x, obj.y, obj.width, obj.height)
-                for obj in self.tmx_data.objects if obj.name == name]
+    def get_layer_rects(self, layer_name: str) -> list[pygame.Rect]:
+        """Return all solid collision rects from an Object Layer."""
+        rects = []
+        try:
+  
+            layer = self.tmx_data.get_layer_by_name(layer_name)
+  
+            for obj in layer:
+                rects.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
+                
+        except ValueError:
+            print(f"Warning: Object Layer '{layer_name}' not found!")
+            
+        return rects
 
     def get_spawn_point(self, name: str) -> pygame.Vector2:
         for obj in self.tmx_data.objects:
