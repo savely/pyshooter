@@ -59,7 +59,7 @@ class Game:
         
 if __name__ == "__main__":
     pygame.init()
-    game = Game(pygame.Surface(Config().screen_size))
+    game = Game(pygame.display.set_mode(Config().screen_size))
     game.run()
     pygame.quit()
     exit()

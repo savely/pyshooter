@@ -8,5 +8,9 @@ class Shooter(Game):
         
 if __name__ == "__main__":
     pygame.init()
+    
     shooter = Shooter() 
     shooter.run()
+    
+    pygame.quit()
+    exit()
