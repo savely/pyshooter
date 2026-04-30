@@ -1,6 +1,8 @@
 import pygame
 from engine.map.map_manager import MapManager
 from configs.config import Config 
+from engine.collision.collision_resolver import CollisionResolver
+from engine.entities.player import Player
 
 class Game:
     """
@@ -34,7 +36,12 @@ class Game:
         self.enemy_projectiles  = pygame.sprite.Group()
     
     def _init_entities(self) -> None:
-        pass
+        self.player = Player(
+            position = self.game_map.get_spawn_point("player_start"),
+            image = pygame.Surface((32, 32)),   # replace with real asset
+        )
+        self.camera.add(self.player)
+        self.player_group.add(self.player)
 
     def run(self) -> None:
         while self.is_running:
@@ -49,7 +56,17 @@ class Game:
                 self.is_running = False 
     
     def _update(self, dt: float) -> None:
-        pass
+        keys    = pygame.key.get_pressed()
+        buttons = pygame.mouse.get_pressed()
+        mouse_screen = pygame.Vector2(pygame.mouse.get_pos())
+        mouse_world  = self.camera.screen_to_world(mouse_screen)
+
+        # 1. Gather input → intent (no movement yet)
+        self.player.handle_input(keys)
+        self.player.handle_mouse(mouse_world, buttons)
+        self.player.update(dt)
+        
+        CollisionResolver.resolve_entity(self.player, self.walls, dt)
     
     def _draw(self) -> None:
         self.screen.fill(self.config.bg_color)
