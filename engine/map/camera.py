@@ -22,9 +22,9 @@ class Camera:
         self._group.draw(surface)
 
     def world_to_screen(self, world_pos: pygame.Vector2) -> pygame.Vector2:
-        ox, oy = self._group.map_layer.get_center_offset()
+        ox, oy = self._group._map_layer.get_center_offset()
         return world_pos + pygame.Vector2(ox, oy)
 
     def screen_to_world(self, screen_pos: pygame.Vector2) -> pygame.Vector2:
-        ox, oy = self._group.map_layer.get_center_offset()
+        ox, oy = self._group._map_layer.get_center_offset()
         return screen_pos - pygame.Vector2(ox, oy)
