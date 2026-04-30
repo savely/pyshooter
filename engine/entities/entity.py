@@ -61,7 +61,6 @@ class Entity(pygame.sprite.Sprite, ABC):
         Subclasses call super().update() first, then do their own logic,
         OR let the collision system move them and skip velocity here.
         """
-        self.position += self.velocity
         self._sync_rects()
         self.on_update(dt)   # default dt=0 for non-collision movement
 

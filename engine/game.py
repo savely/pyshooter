@@ -36,10 +36,15 @@ class Game:
         self.enemy_projectiles  = pygame.sprite.Group()
     
     def _init_entities(self) -> None:
+        
+        player_image = pygame.Surface((32, 32))
+        player_image.fill('red')
+        
         self.player = Player(
             position = self.game_map.get_spawn_point("player_start"),
-            image = pygame.Surface((32, 32)),   # replace with real asset
+            image = player_image,   # replace with real asset
         )
+        
         self.camera.add(self.player)
         self.player_group.add(self.player)
 
@@ -67,6 +72,8 @@ class Game:
         self.player.update(dt)
         
         CollisionResolver.resolve_entity(self.player, self.walls, dt)
+        
+        self.camera.center_on(self.player)
     
     def _draw(self) -> None:
         self.screen.fill(self.config.bg_color)
