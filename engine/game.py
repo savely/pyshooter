@@ -4,6 +4,7 @@ from configs.config import Config
 from engine.collision.collision_resolver import CollisionResolver
 from engine.entities.player import Player
 from engine.entities.projectile import Projectile
+from engine.entities.enemy import Enemy
 
 class Game:
     """
@@ -38,14 +39,25 @@ class Game:
     
     def _init_entities(self) -> None:
         
+        enemy_image = pygame.Surface((32, 32))
+        enemy_image.fill('blue')
+        
         player_image = pygame.Surface((32, 32))
         player_image.fill('red')
         
         self.bullet_image = pygame.Surface((8, 8))
-        self.bullet_image.fill('yellow')        
+        self.bullet_image.fill('yellow') 
+        
+        self.enemy_group.add(
+            Enemy(
+                position = self.game_map.get_spawn_point(self.config.enemy_spawn_point_name),
+                image = enemy_image,
+            )
+        )
+        
         
         self.player = Player(
-            position = self.game_map.get_spawn_point("player_start"),
+            position = self.game_map.get_spawn_point(self.config.player_spawn_point_name),
             image = player_image,   # replace with real asset
         )
         
@@ -95,7 +107,7 @@ class Game:
             # Tell the player they fired so the cooldown resets
             self.player.consume_shoot()
 
-        # --- NEW: 3. Projectile Updates & Collisions ---
+        # 3. Projectile Updates & Collisions 
         # Tick the lifetime countdown for all active projectiles
         for proj in self.player_projectiles:
             proj.update(dt)
@@ -106,10 +118,29 @@ class Game:
             walls=self.walls, 
             target_groups=[self.enemy_group], # Will damage entities in this group
             dt=dt
-        )        
+        ) 
+        for enemy in self.enemy_group:
+            # 1. Check if this enemy can see the player
+            can_see_player = CollisionResolver.has_line_of_sight(
+                observer=enemy,
+                target=self.player,
+                walls=self.walls,
+                max_distance=enemy.AGGRO_RANGE
+            )
+            
+            # 2. Tell the enemy what to do
+            if can_see_player:
+                enemy.chase_target(self.player.position)
+                
+            # 3. Tick enemy animation/cooldowns
+            enemy.update(dt)
+
+            # 4. Resolve Enemy Wall Collisions!
+            CollisionResolver.resolve_entity(enemy, self.walls, dt)
+            
+             
         
         CollisionResolver.resolve_entity(self.player, self.walls, dt)
-        
         self.camera.center_on(self.player)
     
     def _draw(self) -> None:
