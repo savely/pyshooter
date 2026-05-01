@@ -13,8 +13,9 @@ MAPS_DIR = "assets/maps/"
 STARTING_MAP = MAPS_DIR + "simple/simple.tmx"
 
 
+from dataclasses import dataclass, field
 
-
+@dataclass
 class Config:
     """Holds all game configuration constants and settings."""
 
