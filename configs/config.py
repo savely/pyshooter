@@ -13,8 +13,8 @@ MAP_TILE_SIZE = 32
 
 MAPS_DIR = "assets/maps/"
 
-#STARTING_MAP = MAPS_DIR + "simple/simple.tmx"
-STARTING_MAP = MAPS_DIR + "grasslands/grasslands.tmx"
+STARTING_MAP = MAPS_DIR + "simple/simple.tmx"
+#STARTING_MAP = MAPS_DIR + "grasslands/grasslands.tmx"
 
 # projectile settings
 
