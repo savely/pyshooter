@@ -3,6 +3,7 @@ from engine.map.map_manager import MapManager
 from configs.config import Config 
 from engine.collision.collision_resolver import CollisionResolver
 from engine.entities.player import Player
+from engine.entities.projectile import Projectile
 
 class Game:
     """
@@ -40,6 +41,9 @@ class Game:
         player_image = pygame.Surface((32, 32))
         player_image.fill('red')
         
+        self.bullet_image = pygame.Surface((8, 8))
+        self.bullet_image.fill('yellow')        
+        
         self.player = Player(
             position = self.game_map.get_spawn_point("player_start"),
             image = player_image,   # replace with real asset
@@ -70,6 +74,39 @@ class Game:
         self.player.handle_input(keys)
         self.player.handle_mouse(mouse_world, buttons)
         self.player.update(dt)
+        
+        # 2. Shooting Logic 
+        if self.player.can_shoot():
+            # Create the bullet at the player's position, firing in their facing direction
+            new_bullet = Projectile(
+                position=self.player.position.copy(),
+                direction=self.player.facing,
+                image=self.bullet_image,
+                speed=self.config.bullet_speed,     
+                damage=self.config.bullet_damage,
+                owner_tag='player',
+                lifetime=self.config.bullet_lifetime,      # Disappear after 2 seconds
+            )
+            
+            # Add to the camera (for drawing) and the logic group (for collisions)
+            self.camera.add(new_bullet)
+            self.player_projectiles.add(new_bullet)
+            
+            # Tell the player they fired so the cooldown resets
+            self.player.consume_shoot()
+
+        # --- NEW: 3. Projectile Updates & Collisions ---
+        # Tick the lifetime countdown for all active projectiles
+        for proj in self.player_projectiles:
+            proj.update(dt)
+            
+        # Move projectiles and check for wall/enemy hits
+        CollisionResolver.resolve_projectiles(
+            projectiles=self.player_projectiles, 
+            walls=self.walls, 
+            target_groups=[self.enemy_group], # Will damage entities in this group
+            dt=dt
+        )        
         
         CollisionResolver.resolve_entity(self.player, self.walls, dt)
         

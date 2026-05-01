@@ -6,7 +6,7 @@ from .entity import Entity
 class LivingEntity(Entity):
     """
     Adds health, damage reception, invincibility frames,
-    knockback, and a death hook.
+     and a death hook.
 
     Subclasses implement on_death() and on_damaged().
     """

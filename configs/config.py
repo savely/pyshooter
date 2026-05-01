@@ -12,6 +12,10 @@ MAPS_DIR = "assets/maps/"
 
 STARTING_MAP = MAPS_DIR + "simple/simple.tmx"
 
+BULLET_SPEED = 600.0  # Pixels per second
+BULLET_DAMAGE = 25
+BULLET_LIFETIME = 2.0
+
 
 from dataclasses import dataclass, field
 
@@ -44,6 +48,8 @@ class Config:
     @property
     def fps(self) -> int:
         return FPS
+    
+    
     @property
     def starting_map(self) -> str:
         return STARTING_MAP
@@ -67,3 +73,22 @@ class Config:
     @property
     def spawn_point_name(self) -> str:
         return "spawn"
+    
+    @property
+    def player_spawn_point_name(self) -> str:
+        return "player_start"
+    
+    @property
+    def enemy_spawn_point_name(self) -> str:
+        return "enemy_start"
+
+    # projectile settings
+    @property
+    def bullet_speed(self) -> float:
+        return BULLET_SPEED    
+    @property
+    def bullet_damage(self) -> int:
+        return BULLET_DAMAGE
+    @property
+    def bullet_lifetime(self) -> float:
+        return BULLET_LIFETIME
