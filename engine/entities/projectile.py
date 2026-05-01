@@ -37,7 +37,7 @@ class Projectile(Entity):
     #  Update                                                              #
     # ------------------------------------------------------------------ #
 
-    def on_update(self, dt: float, game_map) -> None:
+    def on_update(self, dt: float) -> None:
         self.lifetime -= dt
         if self.lifetime <= 0:
             self.kill()
