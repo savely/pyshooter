@@ -22,6 +22,8 @@ class Enemy(LivingEntity):
         return 'enemy'
 
     def on_update(self, dt: float) -> None:
+        if not self.is_alive: return
+
         if not self.is_aggroed:
             self.velocity = pygame.Vector2(0, 0)
 
@@ -42,3 +44,6 @@ class Enemy(LivingEntity):
             if self.cooldown_timer >= self.COOL_DOWN_TIME:
                 self.is_aggroed = False
                 self.cooldown_timer = 0.0
+
+    def on_death(self) -> None:
+        super().on_death()

@@ -19,7 +19,7 @@ STARTING_MAP = MAPS_DIR + "simple/simple.tmx"
 # projectile settings
 
 BULLET_SPEED = 600.0  # Pixels per second
-BULLET_DAMAGE = 25
+BULLET_DAMAGE = 4#25
 BULLET_LIFETIME = 2.0
 
 # enemy settings

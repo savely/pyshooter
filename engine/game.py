@@ -15,8 +15,7 @@ class Game:
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.config = Config()
-        
-        self.is_running = False
+
         self._init_map()
         self._init_groups()
         self._init_entities()
@@ -121,6 +120,8 @@ class Game:
             dt=dt
         ) 
         for enemy in self.enemy_group:
+            if not enemy.is_alive:
+                continue
             # 1. Check if this enemy can see the player
             can_see_player = CollisionResolver.has_line_of_sight(
                 observer=enemy,
