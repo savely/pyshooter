@@ -173,3 +173,24 @@ class CollisionResolver:
 
         entity.position.y = entity.hitbox.centery
         entity.velocity.y = 0
+        
+    @staticmethod
+    def has_line_of_sight(
+        observer : Entity,
+        target   : Entity,
+        walls    : list[pygame.Rect],
+        max_distance: float
+        ) -> bool:
+        """Returns True if observer can see target without walls in the way, within max_distance.
+        Uses a simple raycast approach: step from observer to target and check for wall collisions.
+        """
+        direction = target.position - observer.position
+        distance = direction.length()
+        if distance > max_distance:
+            return False
+
+        for wall in walls:
+            if wall.clipline(observer.position, target.position):
+                return False  # wall blocks line of sight
+
+        return True  # reached target without hitting a wall
