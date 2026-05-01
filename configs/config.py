@@ -1,23 +1,35 @@
+# common configuration constants for the game
 COLOR_WHITE = (255, 255, 255)
 COLOR_BLACK = (0, 0, 0)
 
+# game screen settings
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
 FPS = 60
 
+# map settings
 MAP_TILE_SIZE = 32
 
 MAPS_DIR = "assets/maps/"
 
-STARTING_MAP = MAPS_DIR + "simple/simple.tmx"
+#STARTING_MAP = MAPS_DIR + "simple/simple.tmx"
+STARTING_MAP = MAPS_DIR + "grasslands/grasslands.tmx"
+
+# projectile settings
 
 BULLET_SPEED = 600.0  # Pixels per second
 BULLET_DAMAGE = 25
 BULLET_LIFETIME = 2.0
 
+# enemy settings
 
-from dataclasses import dataclass, field
+#ENEMY_AGGRO_RADIUS = 200.0 # pixels; how close player must be for enemy to start chasing
+
+# player settings
+
+
+from dataclasses import dataclass
 
 @dataclass
 class Config:
