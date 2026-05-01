@@ -48,12 +48,13 @@ class Game:
         self.bullet_image = pygame.Surface((8, 8))
         self.bullet_image.fill('yellow') 
         
-        self.enemy_group.add(
-            Enemy(
+        enemy = Enemy(
                 position = self.game_map.get_spawn_point(self.config.enemy_spawn_point_name),
                 image = enemy_image,
             )
-        )
+
+        self.enemy_group.add(enemy)     
+        self.camera.add(enemy)
         
         
         self.player = Player(
@@ -131,6 +132,8 @@ class Game:
             # 2. Tell the enemy what to do
             if can_see_player:
                 enemy.chase_target(self.player.position)
+            else:
+                enemy.cooldown(dt)  
                 
             # 3. Tick enemy animation/cooldowns
             enemy.update(dt)
