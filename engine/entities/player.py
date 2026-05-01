@@ -32,6 +32,9 @@ class Player(LivingEntity):
         self.facing: pygame.Vector2 = pygame.Vector2(1, 0)  # direction player faces
         self.wants_to_shoot: bool = False   # set by input, read by scene
 
+    @property
+    def tag(self) -> str:
+        return 'player'
     # ------------------------------------------------------------------ #
     #  Input → intent (no game-state side effects here)                   #
     # ------------------------------------------------------------------ #

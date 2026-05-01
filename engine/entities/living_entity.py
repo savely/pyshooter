@@ -40,11 +40,15 @@ class LivingEntity(Entity):
     def health_ratio(self) -> float:
         return self.health / self.max_health
 
+    @property
+    def tag(self) -> str:
+        return 'alive'
+
     # ------------------------------------------------------------------ #
     #  Public API                                                          #
     # ------------------------------------------------------------------ #
 
-    def take_damage(self, amount: int) -> bool:
+    def take_damage(self, amount: int, source : pygame.Vector2 ) -> bool:
         """
         Returns True if damage was actually applied (not blocked by iframes).
            """
@@ -54,7 +58,7 @@ class LivingEntity(Entity):
         self.health = max(0, self.health - amount)
         self._iframes_timer = self._iframes_duration
 
-        self.on_damaged(amount)
+        self.on_damaged(amount, source)
 
         if not self.is_alive:
             self.on_death()
@@ -78,6 +82,8 @@ class LivingEntity(Entity):
     # ------------------------------------------------------------------ #
     #  Hooks — override in subclasses                                      #
     # ------------------------------------------------------------------ #
+    def on_update(self, dt: float) -> None:
+        pass
 
     def on_damaged(self, amount: int, source: pygame.Vector2 | None) -> None:
         """Visual/audio feedback goes here (flash, sound, particles…)."""

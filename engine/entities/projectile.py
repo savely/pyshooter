@@ -1,12 +1,12 @@
 import pygame
 from .entity import Entity
+from .living_entity import LivingEntity
 
 
 class Projectile(Entity):
     """
     Does NOT inherit LivingEntity — it has no health; it just hits and dies.
-
-    owner_tag  : 'player' | 'enemy' — prevents friendly fire
+    owner_tag: 'player' | 'enemy' — prevents friendly fire
     on_hit     : callback(target) called when the projectile hits something;
                  the scene passes a lambda that applies damage + effects
     lifetime   : auto-kills after N seconds even without a hit
@@ -47,8 +47,10 @@ class Projectile(Entity):
     #  Hit handling                                                        #
     # ------------------------------------------------------------------ #
 
-    def hit_entity(self, target: pygame.sprite.Sprite) -> None:
+    def hit_entity(self, target: LivingEntity) -> None:
         """Called by the scene's collision system when touching a LivingEntity."""
+        if target.tag != self.owner_tag:
+            target.take_damage(self.damage, self.direction)
         self.kill()
 
     def on_wall_hit(self) -> None:

@@ -17,6 +17,10 @@ class Enemy(LivingEntity):
         self.is_aggroed = False
         self.cooldown_timer = 0.0
 
+    @property
+    def tag(self) -> str:
+        return 'enemy'
+
     def on_update(self, dt: float) -> None:
         if not self.is_aggroed:
             self.velocity = pygame.Vector2(0, 0)
