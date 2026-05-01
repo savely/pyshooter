@@ -34,7 +34,7 @@ class TiledGameMap(GameMap):
         self.tmx_data = pytmx.util_pygame.load_pygame(filename)
         map_data = pyscroll.data.TiledMapData(self.tmx_data)
         self.map_layer = pyscroll.BufferedRenderer(map_data, screen_size)
-        self.map_layer.zoom = 2
+        self.map_layer.zoom = 2.0
 
     def get_layer_rects(self, layer_name: str) -> list[pygame.Rect]:
         """Return all solid collision rects from an Object Layer."""
