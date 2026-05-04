@@ -1,10 +1,10 @@
 import pygame
 from engine.game import Game
+from configs.config import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class Shooter(Game):
     def __init__(self):
-        screen = pygame.display.set_mode((1200, 800))
-        super().__init__(screen)
+        super().__init__(pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT)))
         
 if __name__ == "__main__":
     pygame.init()
