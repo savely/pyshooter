@@ -5,6 +5,8 @@ from engine.collision.collision_resolver import CollisionResolver
 from engine.entities.player import Player
 from engine.entities.projectile import Projectile
 from engine.entities.enemy import Enemy
+from engine.fsm.fsm import FSM
+from engine.fsm.game_states import SplashState, MenuState, PlayState, GameOverState
 
 class Game:
     """
@@ -15,12 +17,20 @@ class Game:
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.config = Config()
+        self.is_running = False
+        
+        # FSM
+        
+        self.fsm = FSM(self)
+        self.fsm.add(SplashState())
+        self.fsm.add(MenuState())
+        self.fsm.add(PlayState())
+        self.fsm.add(GameOverState())
 
         self._init_map()
         self._init_groups()
         self._init_entities()
-        self.is_running = True
-        
+       
 
     
     def _init_map(self) -> None:
@@ -47,13 +57,22 @@ class Game:
         self.bullet_image = pygame.Surface((8, 8))
         self.bullet_image.fill('yellow') 
         
-        enemy = Enemy(
-                position = self.game_map.get_spawn_point(self.config.enemy_spawn_point_name),
+        enemy1 = Enemy(
+                position = self.game_map.get_spawn_point(self.config.enemy_spawn_point_name + '_1'),
                 image = enemy_image,
             )
 
-        self.enemy_group.add(enemy)     
-        self.camera.add(enemy)
+        self.enemy_group.add(enemy1)     
+        self.camera.add(enemy1)
+        
+        enemy2 = Enemy(
+                position = self.game_map.get_spawn_point(self.config.enemy_spawn_point_name + '_2'),
+                image = enemy_image,
+            )
+
+        self.enemy_group.add(enemy2)     
+        self.camera.add(enemy2)
+        
         
         
         self.player = Player(
@@ -65,16 +84,25 @@ class Game:
         self.player_group.add(self.player)
 
     def run(self) -> None:
+        self.is_running = True
+        self.fsm.start("SplashState")
+        
         while self.is_running:
             dt = min(0.05, self.clock.tick(self.config.fps) / 1000.0)   # clamp: prevents tunnelling on lag spikes
-            self._handle_events()
-            self._update(dt)
-            self._draw()
+            events = pygame.event.get()
+
+            #handle quit events globally so every state doesn't have to        
+            for event in events:
+                if event.type == pygame.QUIT:
+                    self.is_running = False
+
+            context = {
+                "dt": dt,
+                "events": events,
+                "owner": self
+            }
+            self.fsm.update(context)
     
-    def _handle_events(self) -> None:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.is_running = False 
     
     def _update(self, dt: float) -> None:
         keys    = pygame.key.get_pressed()
@@ -133,13 +161,15 @@ class Game:
             # 2. Tell the enemy what to do
             if can_see_player:
                 enemy.chase_target(self.player.position)
+                enemy.try_damage(self.player)
             else:
                 enemy.cooldown(dt)  
+                
                 
             # 3. Tick enemy animation/cooldowns
             enemy.update(dt)
 
-            # 4. Resolve Enemy Wall Collisions!
+            # 4. Resolve Enemy Wall Collisions
             CollisionResolver.resolve_entity(enemy, self.walls, dt)
             
              

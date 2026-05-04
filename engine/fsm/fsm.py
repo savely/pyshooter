@@ -1,4 +1,4 @@
-from fsm.base_state import State
+from .base_state import State
 
 class FSM:
     """
