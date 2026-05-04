@@ -63,10 +63,16 @@ class PlayState(State):
     def update(self, context: dict) -> str | None:
         dt = context.get('dt', 0)
         owner = context.get('owner')
+        events = context.get('events', [])
         
         # If the player dies, transition to Game Over
         if not owner.player.is_alive:
             return "GameOverState"
+        
+        #if ESC is pressed, return to menu
+        for event in events:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                return "MenuState"
 
         # Delegate to the Game's update and draw methods
         owner._update(dt)
