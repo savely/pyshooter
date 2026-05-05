@@ -84,11 +84,13 @@ class LivingEntity(Entity):
     # ------------------------------------------------------------------ #
     def on_update(self, dt: float) -> None:
         pass
-
+        
     def on_damaged(self, amount: int, source: pygame.Vector2 | None) -> None:
-        """Visual/audio feedback goes here (flash, sound, particles…)."""
-        pass
+        if self._fsm:
+            self._fsm.transition("Hurt", force=True)
 
     def on_death(self) -> None:
-        """Drop loot, play animation, remove from groups, etc."""
-        self.kill()     # removes from all pygame sprite groups
+        if self._fsm:
+            self._fsm.transition("Dead", force=True)
+        else:
+            self.kill()        

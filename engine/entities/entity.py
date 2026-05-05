@@ -41,6 +41,9 @@ class Entity(pygame.sprite.Sprite, ABC):
         # Separate, smaller hitbox for gameplay collision (walls, projectiles)
         sx, sy = collision_shrink
         self.hitbox = self.rect.inflate(-sx * 2, -sy * 2)
+        
+        # For FSM context access if needed (e.g. for state transitions)
+        self._fsm = None    # set by subclasses after super().__init__()
 
     # ------------------------------------------------------------------ #
     #  Sync helpers                                                        #
@@ -62,8 +65,19 @@ class Entity(pygame.sprite.Sprite, ABC):
         OR let the collision system move them and skip velocity here.
         """
         self._sync_rects()
-        self.on_update(dt)   # default dt=0 for non-collision movement
+        if self._fsm:
+            context = self._build_context(dt)
+            self._fsm.update(context)
+        else:
+            self.on_update(dt)   # default dt=0 for non-collision movement
 
+    def _build_context(self, dt: float) -> dict:
+        """
+        Base context passed to every state.
+        Subclasses extend this to add entity-specific data (target, etc.).
+        """
+        return {"dt": dt}  
+    
     # ------------------------------------------------------------------ #
     #  Abstract interface                                                  #
     # ------------------------------------------------------------------ #
@@ -71,4 +85,6 @@ class Entity(pygame.sprite.Sprite, ABC):
     @abstractmethod
     def on_update(self, dt: float) -> None:
         """Per-frame logic (input / AI / lifetime). Called by update()."""
-        ...
+        pass
+        
+      
