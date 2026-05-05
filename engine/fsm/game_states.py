@@ -4,7 +4,7 @@ from configs.config import COLOR_WHITE
 
 
 class SplashState(State):
-    def enter(self, owner) -> None:
+    def enter(self, context: dict) -> None:
         self.timer = 0.0
 
     def update(self, context: dict) -> str | None:
@@ -24,12 +24,12 @@ class SplashState(State):
             return "MenuState"
         return None
 
-    def exit(self) -> None:
+    def exit(self, context: dict) -> None:
         pass
 
 
 class MenuState(State):
-    def enter(self, owner) -> None:
+    def enter(self, context: dict) -> None:
         pass
 
     def update(self, context: dict) -> str | None:
@@ -49,13 +49,14 @@ class MenuState(State):
                 return "PlayState"
         return None
 
-    def exit(self) -> None:
+    def exit(self, context: dict) -> None:
         pass
 
 
 class PlayState(State):
-    def enter(self, owner) -> None:
+    def enter(self, context: dict) -> None:
         # Initialize the game world fresh every time we enter the PlayState
+        owner = context.get('owner')
         owner._init_map()
         owner._init_groups()
         owner._init_entities()
@@ -79,12 +80,12 @@ class PlayState(State):
         owner._draw()
         return None
 
-    def exit(self) -> None:
+    def exit(self, context: dict) -> None:
         pass
 
 
 class GameOverState(State):
-    def enter(self, context) -> None:
+    def enter(self, context: dict) -> None:
         pass
 
     def update(self, context: dict) -> str | None:
@@ -108,5 +109,5 @@ class GameOverState(State):
                 return "MenuState"
         return None
 
-    def exit(self) -> None:
+    def exit(self, context: dict) -> None:
         pass

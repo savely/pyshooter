@@ -17,19 +17,20 @@ class FSM:
         self._states[state.name] = state
         return self
 
-    def start(self, name: str, context: dict = None) -> None:
+    def start(self, name: str) -> None:
         """Activate the FSM. Must be called before update()."""
         self._current = self._get(name)
-        self._current.enter(self._owner)
+        self._current.enter({ "owner" :self._owner})
         
     #runtime methods
 
     def update(self, context: dict = None) -> None:
-        next_name = self._current.update(context)
+        ctx = self._make_ctx(context)
+        next_name = self._current.update(ctx)
         if next_name:
-            self.transition(next_name)
+            self.transition(next_name, ctx)
 
-    def transition(self, name: str, force: bool = False) -> None:
+    def transition(self, name: str, context: dict = None, force: bool = False) -> None:
         """
         Switch to a new state.
         Blocked if the incoming state has lower priority than the current one,
@@ -39,10 +40,10 @@ class FSM:
 
         if not force and incoming.priority < self._current.priority:
             return
-
-        self._current.exit()
+        ctx = self._make_ctx(context)
+        self._current.exit(ctx)
         self._current = incoming
-        self._current.enter(self._owner)
+        self._current.enter(ctx)
 
     #accessors
     @property
@@ -58,3 +59,10 @@ class FSM:
             known = ", ".join(self._states)
             raise KeyError(f"Unknown state '{name}'. Registered: [{known}]")
         return self._states[name]
+    
+    def _make_ctx(self, extra: dict = None) -> dict:
+        """Always inject owner; merge any extra keys the caller provides."""
+        ctx = {"owner": self._owner}
+        if extra:
+            ctx.update(extra)
+        return ctx    
