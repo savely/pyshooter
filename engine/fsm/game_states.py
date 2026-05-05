@@ -1,5 +1,6 @@
 import pygame
-from engine.fsm.base_state import State
+from ..fsm.base_state import State
+from..fsm.fsm import FSM
 from configs.config import COLOR_WHITE
 
 

@@ -1,6 +1,9 @@
 # entities/player.py
 import pygame
 from .living_entity import LivingEntity
+from engine.fsm.player_states import Idle, Run, Shoot, Hurt, Dead
+from engine.fsm.fsm import FSM
+
 
 
 class Player(LivingEntity):
@@ -31,6 +34,15 @@ class Player(LivingEntity):
         self._shoot_timer: float = 0.0
         self.facing: pygame.Vector2 = pygame.Vector2(1, 0)  # direction player faces
         self.wants_to_shoot: bool = False   # set by input, read by scene
+        self._fsm = (
+            FSM(self)
+            .add(Idle())
+            .add(Run())
+            .add(Shoot())
+            .add(Hurt())
+            .add(Dead())
+        )
+        self._fsm.start("Idle")        
 
     @property
     def tag(self) -> str:
@@ -77,12 +89,12 @@ class Player(LivingEntity):
         return self.wants_to_shoot and self._shoot_timer <= 0
 
     def consume_shoot(self) -> None:
-        """Called by the scene after spawning a projectile."""
         self._shoot_timer = self.SHOOT_COOLDOWN
 
     # ------------------------------------------------------------------ #
     #  Hooks                                                               #
     # ------------------------------------------------------------------ #
+
 
     def on_damaged(self, amount, source) -> None:
         print(f"[Player] took {amount} damage, hp={self.health}")   # → replace with flash/sound
@@ -90,3 +102,13 @@ class Player(LivingEntity):
     def on_death(self) -> None:
         print("[Player] died")   # → trigger game-over screen
         self.kill()
+
+     
+    # ------------------------------------------------------------------ #
+    #  Context                                                             #
+    # ------------------------------------------------------------------ #
+
+    def _build_context(self, dt: float) -> dict:
+        if self._shoot_timer > 0:
+            self._shoot_timer -= dt
+        return {"dt": dt}
