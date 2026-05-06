@@ -53,6 +53,9 @@ class FSM:
     #helpers
     def is_in(self, *names: str) -> bool:
         return self._current.name in names
+    
+    def current_state(self) -> State:
+        return self._current
 
     def _get(self, name: str) -> State:
         if name not in self._states:

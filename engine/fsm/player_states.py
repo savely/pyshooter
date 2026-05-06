@@ -1,5 +1,4 @@
 import pygame
-from engine.entities.living_entity import LivingEntity
 from ..fsm.fsm import FSM
 from ..fsm.base_state import State
 
